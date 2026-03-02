@@ -10,8 +10,7 @@ Write unit and end-to-end tests, diagnose bugs from failing test output, and use
 
 <h4>Context</h4>
 
-The back-end contains intentional bugs at specific boundary values.
-You will discover and fix them by writing tests, then use an AI agent to generate additional coverage.
+The back-end contains intentional bugs that you will discover and fix by writing tests, then use an AI agent to generate additional coverage.
 
 <!-- TODO diagram -->
 
@@ -90,9 +89,9 @@ Title: `[Task] Back-end Testing`
    [`backend/tests/unit/test_interactions.py`](../../../backend/tests/unit/test_interactions.py).
 2. Add a new unit test that targets the following boundary-value case:
 
-   An interaction where `item_id` and `learner_id` are different values — for example, `item_id=1` and `learner_id=2`. When filtering by `item_id=1`, this interaction should appear in the results.
+   An interaction whose `item_id` is exactly equal to `max_item_id` — for example, `item_id=2` and `max_item_id=2`. This interaction should appear in the results because the filter condition is "less than or equal to."
 
-   Name the test `test_filter_includes_interaction_with_different_learner_id`.
+   Name the test `test_filter_includes_interaction_at_boundary`.
 
 3. To run the tests,
 
@@ -107,40 +106,40 @@ Title: `[Task] Back-end Testing`
    The output should be similar to this:
 
    ```terminal
-   FAILED backend/tests/unit/test_interactions.py::test_filter_includes_interaction_with_different_learner_id - AssertionError: assert 0 == 1
+   FAILED backend/tests/unit/test_interactions.py::test_filter_includes_interaction_at_boundary - AssertionError: assert 0 == 1
    ```
 
    This line means the following:
    - The test failed (`FAILED`).
    - The test is in the file `backend/tests/unit/test_interactions.py`.
-   - The name of the failing test is `test_filter_includes_interaction_with_different_learner_id`.
+   - The name of the failing test is `test_filter_includes_interaction_at_boundary`.
    - The failed assertion is `assert 0 == 1` — the filter returned 0 interactions, but 1 was expected.
 
 #### 1.3.3. Fix the bug
 
 1. [Open the file](../../../wiki/vs-code.md#open-the-file):
    [`backend/app/routers/interactions.py`](../../../backend/app/routers/interactions.py).
-2. Fix the bug in the `_filter_by_item_id` function.
+2. Fix the bug in the `_filter_by_max_item_id` function.
 
 3. <details><summary>Click to open a hint</summary>
 
    The filter is applied in-memory after all interactions are fetched from the database.
-   Look at the condition that decides which interactions to include — it compares the wrong field on the interaction object.
+   Look at the comparison operator in the condition that decides which interactions to include — it excludes the boundary value.
 
    </details>
 
 4. <details><summary>Click to open the solution</summary>
 
-   Find this line in `_filter_by_item_id`:
+   Find this line in `_filter_by_max_item_id`:
 
    ```python
-   return [i for i in interactions if i.learner_id == item_id]  # BUG
+   return [i for i in interactions if i.item_id < max_item_id]  # BUG
    ```
 
    Change it to:
 
    ```python
-   return [i for i in interactions if i.item_id == item_id]
+   return [i for i in interactions if i.item_id <= max_item_id]
    ```
 
    </details>
@@ -170,7 +169,7 @@ Title: `[Task] Back-end Testing`
    Use this commit message:
 
    ```text
-   fix: filter interactions by item_id instead of learner_id
+   fix: use <= instead of < in max_item_id filter
    ```
 
 <!-- TODO push commit -->
@@ -240,7 +239,7 @@ Title: `[Task] Back-end Testing`
 
 1. [Open the file](../../../wiki/vs-code.md#open-the-file):
    [`backend/tests/e2e/test_interactions.py`](../../../backend/tests/e2e/test_interactions.py).
-2. Add two end-to-end tests that cover the following boundary-value cases:
+2. Add two end-to-end tests that cover the following cases:
 
    - Test 1: `GET /interactions/` returns [`HTTP` status code](../../../wiki/http.md#http-response-status-code) `200`.
    - Test 2: `GET /interactions/` response body is a [`JSON`](../../../wiki/file-formats.md#json) array.
