@@ -61,7 +61,11 @@ def greet(name):
 ### Install `uv`
 
 1. [Check the current shell in the `VS Code Terminal`](./vs-code.md#check-the-current-shell-in-the-vs-code-terminal).
-2. Follow the [installation instructions](https://docs.astral.sh/uv/getting-started/installation/) for `macOS and Linux`, even if you use `Windows`.
+
+   ([`Windows`](./operating-system.md#linux) only) Now you use a `Linux` shell.
+
+2. Follow the [installation instructions](https://docs.astral.sh/uv/getting-started/installation/) for [`macOS`](./operating-system.md#macos) and [`Linux`](./operating-system.md#linux), even if you use `Windows`.
+
 3. To check that `uv` is installed,
 
    [run in the `VS Code Terminal`](./vs-code.md#run-a-command-in-the-vs-code-terminal):
