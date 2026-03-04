@@ -388,8 +388,8 @@ See [`<branch>`](../../../wiki/git.md#branch), [`<remote>`](../../../wiki/git.md
 
 ## 4.26. Example IP address
 
-Use `10.93.24.1` as the example IP address in all documentation.
+Use `192.0.2.1` as the example IP address in all documentation.
 
-Good: `10.93.24.1`
+Good: `192.0.2.1`
 
 Bad: `192.168.1.1`, `10.0.0.1`

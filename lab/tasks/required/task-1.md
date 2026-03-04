@@ -306,7 +306,7 @@ Title: `[Task] Observe System Component Interaction`
 
    ~~~
    ```js
-   fetch("http://10.93.24.1:42002/learners/", {
+   fetch("http://192.0.2.1:42002/learners/", {
       "headers": {
          "accept": "application/json",
    ...
