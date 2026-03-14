@@ -142,6 +142,10 @@ We refer to your fork as `fork` and to the original repo as `upstream`.
 > docker compose --env-file .env.docker.secret up --build -d
 > ```
 >
+> **Hangs at `=> [caddy builder 4/7] RUN npm install -g pnpm`**
+>
+> or
+>
 > **DNS resolution errors (`getaddrinfo EAI_AGAIN`).**
 >
 > If you see DNS errors like `getaddrinfo EAI_AGAIN registry.npmjs.org`, `Docker` can't resolve domain names. This is a university network DNS issue. Add Google DNS to `Docker`:
@@ -198,7 +202,7 @@ The database starts empty. You need to run the ETL pipeline to populate it with 
 
 3. Switch to the **Dashboard** tab.
 
-   You should see charts with analytics data (score distribution, submissions timeline, group performance, task pass rates).
+   You should see charts with analytics data (submissions timeline, score distribution, group performance, task pass rates).
 
 > [!IMPORTANT]
 > If the dashboard shows no data or errors, make sure:
@@ -268,7 +272,7 @@ The autochecker tests your agent against your **deployed backend on your VM**. Y
 
 Your agent needs an LLM to answer questions. [Qwen Code](../../wiki/qwen.md#what-is-qwen-code) provides **1000 free requests per day** and works from Russia — no VPN or credit card needed.
 
-1. [Set up the Qwen Code API on your VM](../../wiki/qwen.md#set-up-the-qwen-code-api-remote-machine).
+1. [Set up the Qwen Code API on your VM](../../wiki/qwen.md#set-up-the-qwen-code-api-remote).
 
    After completing the setup, you will have the Qwen API running on your VM at `http://localhost:<qwen-api-port>/v1`.
 
