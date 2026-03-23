@@ -13,6 +13,7 @@ from .commands import (
     handle_labs,
     handle_scores,
 )
+from .intent_router import handle_natural_language, route_intent
 
 __all__ = [
     "handle_start",
@@ -20,4 +21,6 @@ __all__ = [
     "handle_health",
     "handle_labs",
     "handle_scores",
+    "handle_natural_language",
+    "route_intent",
 ]
