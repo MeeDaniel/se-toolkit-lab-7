@@ -91,3 +91,76 @@ By the end of this lab, you should be able to say:
 2. [Backend Integration](./lab/tasks/required/task-2.md) — P0: slash commands + real data
 3. [Intent-Based Natural Language Routing](./lab/tasks/required/task-3.md) — P1: LLM tool use
 4. [Containerize and Document](./lab/tasks/required/task-4.md) — P3: containerize + deploy
+
+## Deploy
+
+### Prerequisites
+
+Before deploying, ensure you have:
+
+1. **`.env.docker.secret`** configured with bot credentials:
+   - `BOT_TOKEN` — Telegram bot token from @BotFather
+   - `LMS_API_KEY` — Backend API key
+   - `LLM_API_KEY` — Qwen Code API key
+   - `LLM_API_MODEL` — Model name (e.g., `qwen3-coder-plus`)
+
+2. **Backend running** — The bot depends on the backend service
+
+3. **Qwen proxy running** — `~/qwen-code-oai-proxy` docker compose should be up
+
+### Deploy commands
+
+```bash
+cd ~/se-toolkit-lab-7
+
+# Stop any running bot process (from nohup development)
+pkill -f "bot.py" 2>/dev/null
+
+# Build and start all services (including bot)
+docker compose --env-file .env.docker.secret up --build -d
+
+# Check status
+docker compose --env-file .env.docker.secret ps
+```
+
+> **Note: Docker DNS issues.** If the bot container fails to build with DNS errors, your Docker daemon may need DNS configuration. Add `dns: ["8.8.8.8", "8.8.4.4"]` to `/etc/docker/daemon.json` and restart Docker:
+> ```bash
+> sudo systemctl restart docker
+> ```
+>
+> Alternatively, run the bot without Docker (development mode):
+> ```bash
+> cd bot && nohup uv run python bot.py > bot.log 2>&1 &
+> ```
+
+### Verify deployment
+
+```bash
+# Check bot logs for startup errors
+docker compose --env-file .env.docker.secret logs bot --tail 30
+
+# Verify backend is healthy
+curl -sf http://localhost:42002/docs
+
+# Test in Telegram
+# Send: /start, /health, "what labs are available?"
+```
+
+### Troubleshooting
+
+| Symptom | Fix |
+|---------|-----|
+| Bot container restarting | Check logs: `docker compose logs bot` |
+| `/health` fails | Ensure `LMS_API_URL=http://backend:8000` (not localhost) |
+| LLM queries fail | Ensure `LLM_API_BASE_URL` uses `host.docker.internal` |
+| "BOT_TOKEN is required" | Add to `.env.docker.secret` |
+
+### Stop / Update
+
+```bash
+# Stop all services
+docker compose --env-file .env.docker.secret down
+
+# Rebuild and restart after code changes
+docker compose --env-file .env.docker.secret up --build -d
+```
