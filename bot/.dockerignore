@@ -1,0 +1,9 @@
+# Bot .dockerignore
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.log
+.env*
+!pyproject.toml
+!uv.lock

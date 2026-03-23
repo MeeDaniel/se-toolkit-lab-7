@@ -15,10 +15,13 @@ COPY pyproject.toml uv.lock ./
 # Install dependencies using uv (creates .venv)
 RUN uv sync --no-dev
 
-# Copy bot source code
-COPY . .
+# Copy bot source code (but not .venv - that's created by uv sync)
+COPY bot.py ./
+COPY handlers/ ./handlers/
+COPY services/ ./services/
+COPY config.py ./
 
-# Activate venv and set path
+# Set environment variables
 ENV VIRTUAL_ENV=/app/.venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 ENV PYTHONUNBUFFERED=1
